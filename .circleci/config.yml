@@ -1,3 +1,11 @@
+# todo:
+# Android:
+#  - Cordova
+# iOS
+#  - Downgrade cocoapods
+#  - Downgrade node
+#  - Cordova
+
 aliases:
   - &upgrade-git
     name: Update Git
@@ -21,11 +29,17 @@ aliases:
       sudo make && sudo make install
       git --version
 
+  - &downgrade-cocoapods
+    name: Downgrade to CocoaPods 1.4
+    command:  |
+      gem uninstall cocoapods
+      gem install cocoapods -v 1.4
+
   - &setup
     name: Setup
     command:  |
       node ./install.js
-      sudo npm install -g cordova@7.0.0
+      sudo npm install -g cordova@8.0.0
       cordova telemetry off
     when: always
 
@@ -48,7 +62,7 @@ linux: &linux
 mac: &mac
   working_directory: ~/SalesforceMobileSDK-Package
   macos:
-    xcode: "9.3.0"
+    xcode: "9.4.1"
   shell: /bin/bash --login -eo pipefail
 
 version: 2
@@ -59,26 +73,29 @@ jobs:
       - checkout
       - run: *upgrade-git
       - run: *setup
-      - run:
-          name: Build Native Java App
-          command: ./test/test_force.js --os=android --apptype=native
-          when: always
-      - run:
-          name: Build Native Kotlin App
-          command: ./test/test_force.js --os=android --apptype=native_kotlin
-          when: always
+      #- run:
+      #    name: Build Native Java App
+      #    command: ./test/test_force.js --os=android --apptype=native
+      #    when: always
+      #- run:
+      #    name: Build Native Kotlin App
+      #    command: ./test/test_force.js --os=android --apptype=native_kotlin
+      #    when: always
       - run:
           name: Build Hybrid Local App
-          command: ./test/test_force.js --os=android --apptype=hybrid_local
+          command:  |
+            ./test/test_force.js --os=android --apptype=hybrid_local
+            echo "result: ${$?}"
+            $?
           when: always
-      - run:
-          name: Build Hybrid Remote App
-          command: ./test/test_force.js --os=android --apptype=hybrid_remote
-          when: always
-      - run:
-          name: Build React Native App
-          command: ./test/test_force.js --os=android --apptype=react_native
-          when: always
+      #- run:
+      #    name: Build Hybrid Remote App
+      #    command: ./test/test_force.js --os=android --apptype=hybrid_remote
+      #    when: always
+      #- run:
+      #    name: Build React Native App
+      #    command: ./test/test_force.js --os=android --apptype=react_native
+      #    when: always
 
   build-forcedroid-sfdx:
     <<: *linux
@@ -117,27 +134,30 @@ jobs:
       - checkout
       - run: *setup
       - run: *install-ant
-      - run:
-          name: Build Native Objective-C App
-          command: ./test/test_force.js --os=ios --apptype=native
-          when: always
-      - run:
-          name: Build Native Swift App
-          command: ./test/test_force.js --os=ios --apptype=native_swift
-          when: always
+      #- run:
+      #    name: Build Native Objective-C App
+      #    command: ./test/test_force.js --os=ios --apptype=native
+      #    when: always
+      #- run:
+      #    name: Build Native Swift App
+      #    command: ./test/test_force.js --os=ios --apptype=native_swift
+      #    when: always
       - run:
           name: Build Hybrid Local App
-          command: ./test/test_force.js --os=ios --apptype=hybrid_local
+          command:  |
+            ./test/test_force.js --os=ios --apptype=hybrid_local
+            echo "result: ${$?}"
+            $?
           when: always
-      - run:
-          name: Build Hybrid Remote App
-          command: ./test/test_force.js --os=ios --apptype=hybrid_remote
-          when: always
-      - run:
-          name: Build React Native App
-          command: ./test/test_force.js --os=ios --apptype=react_native
-          no_output_timeout: 20m
-          when: always
+      #- run:
+      #    name: Build Hybrid Remote App
+      #    command: ./test/test_force.js --os=ios --apptype=hybrid_remote
+      #    when: always
+      #- run:
+      #    name: Build React Native App
+      #    command: ./test/test_force.js --os=ios --apptype=react_native
+      #    no_output_timeout: 20m
+      #    when: always
 
   build-forceios-sfdx:
     <<: *mac
@@ -177,22 +197,6 @@ workflows:
   pr-build-all-apps:
     jobs:
       - build-forcedroid
-      - build-forcedroid-sfdx
+      #- build-forcedroid-sfdx
       - build-forceios
-      - build-forceios-sfdx
-
-  # Cron are on a timezone 8 hours ahead of PST
-  # Build everything at ~11:30pm Mon/Wed/Fri Nights
-  weekly-build-all-apps:
-    triggers:
-      - schedule:
-          cron: "30 7 * * 2,4,6"
-          filters:
-            branches:
-              only:
-                - dev
-    jobs:
-      - build-forcedroid
-      - build-forcedroid-sfdx
-      - build-forceios
-      - build-forceios-sfdx
+      #- build-forceios-sfdx
