@@ -84,7 +84,7 @@ jobs:
       - run:
           name: Build Hybrid Local App
           command:  |
-            ./test_fail.js
+            .circleci/test_fail.js
           #  ./test/test_force.js --os=android --apptype=hybrid_local
           #  echo "result: ${$?}"
           when: always
@@ -145,7 +145,7 @@ jobs:
       - run:
           name: Build Hybrid Local App
           command:  |
-            ./test_fail.js
+            .circleci/test_fail.js
           #  ./test/test_force.js --os=ios --apptype=hybrid_local
           #  echo "result: ${$?}"
           #  $?
