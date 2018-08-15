@@ -39,8 +39,8 @@ aliases:
     name: Setup
     command:  |
       node ./install.js
-      sudo npm install -g cordova@8.0.0
-      cordova telemetry off
+      sudo npm install -g cordova@7.0.0
+      sudo cordova telemetry off
     when: always
 
   - &install-ant
@@ -86,7 +86,6 @@ jobs:
           command:  |
             ./test/test_force.js --os=android --apptype=hybrid_local
             echo "result: ${$?}"
-            $?
           when: always
       #- run:
       #    name: Build Hybrid Remote App
