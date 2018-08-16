@@ -85,9 +85,7 @@ jobs:
           name: Build Hybrid Local App
           command:  |
             ./test/test_force.js --os=android --apptype=hybrid_local
-            if ls tmp**/App_hybrid_local_android/platforms/android/app/build/outputs/apk/debug/app-debug.apk 1> /dev/null 2>&1; then
-              echo "App Built."
-            else
+            if [ ! -f tmp**/App_hybrid_local_android/platforms/android/app/build/outputs/apk/debug/app-debug.apk ]; then
               exit 1
             fi
           when: always
@@ -145,14 +143,14 @@ jobs:
       #    name: Build Native Swift App
       #    command: ./test/test_force.js --os=ios --apptype=native_swift
       #    when: always
-      #- run:
-      #    name: Build Hybrid Local App
-      #    command:  |
-      #      ./test/test_force.js --os=ios --apptype=hybrid_local
-      #      if ls tmp**/App_hybrid_local_ios/platforms/ios/build/emulator/App_hybrid_local_ios.app 1> /dev/null 2>&1; then
-      #        exit 1
-      #      fi
-      #    when: always
+      - run:
+          name: Build Hybrid Local App
+          command:  |
+            ./test/test_force.js --os=ios --apptype=hybrid_local
+            if [ ! -f tmp**/App_hybrid_local_ios/platforms/ios/build/emulator/App_hybrid_local_ios.app ]; then
+              exit 1
+            fi
+          when: always
       #- run:
       #    name: Build Hybrid Remote App
       #    command: ./test/test_force.js --os=ios --apptype=hybrid_remote
@@ -202,5 +200,5 @@ workflows:
     jobs:
       - build-forcedroid
       #- build-forcedroid-sfdx
-      #- build-forceios
+      - build-forceios
       #- build-forceios-sfdx
