@@ -3,5 +3,5 @@
 main();
 
 function main() {
-    process.exit(1);
+    process.exit(0);
 }
