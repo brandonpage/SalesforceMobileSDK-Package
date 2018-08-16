@@ -147,7 +147,10 @@ jobs:
           name: Build Hybrid Local App
           command:  |
             .circleci/test_fail.js
-            $?
+            if [[ $? -ne 0 ]]
+              $?
+            fi
+
           #  ./test/test_force.js --os=ios --apptype=hybrid_local
           #  echo "result: ${$?}"
           #  $?
