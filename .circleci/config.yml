@@ -39,7 +39,7 @@ aliases:
     name: Setup
     command:  |
       node ./install.js
-      sudo npm install -g cordova@7.0.0
+      sudo npm install -g cordova@8.0.0
       sudo cordova telemetry off
     when: always
 
@@ -73,14 +73,22 @@ jobs:
       - checkout
       - run: *upgrade-git
       - run: *setup
-      #- run:
-      #    name: Build Native Java App
-      #    command: ./test/test_force.js --os=android --apptype=native
-      #    when: always
-      #- run:
-      #    name: Build Native Kotlin App
-      #    command: ./test/test_force.js --os=android --apptype=native_kotlin
-      #    when: always
+      - run:
+          name: Build Native Java App
+          command:  |
+            ./test/test_force.js --os=android --apptype=native
+            if [ ! -f tmp**/App_native_android/app/build/outputs/apk/debug/app-debug.apk ]; then
+              exit 1
+            fi
+          when: always
+      - run:
+          name: Build Native Kotlin App
+          command:  |
+            ./test/test_force.js --os=android --apptype=native_kotlin
+            if [ ! -f tmp13920/App_native_kotlin_android/app/build/outputs/apk/debug/app-debug.apk ]; then
+              exit 1
+            fi
+          when: always
       - run:
           name: Build Hybrid Local App
           command:  |
@@ -89,14 +97,22 @@ jobs:
               exit 1
             fi
           when: always
-      #- run:
-      #    name: Build Hybrid Remote App
-      #    command: ./test/test_force.js --os=android --apptype=hybrid_remote
-      #    when: always
-      #- run:
-      #    name: Build React Native App
-      #    command: ./test/test_force.js --os=android --apptype=react_native
-      #    when: always
+      - run:
+          name: Build Hybrid Remote App
+          command:  |
+            ./test/test_force.js --os=android --apptype=hybrid_remote
+            if [ ! -f tmp**/App_hybrid_remote_android/platforms/android/app/build/outputs/apk/debug/app-debug.apk ]; then
+              exit 1
+            fi
+          when: always
+      - run:
+          name: Build React Native App
+          command:  |
+            ./test/test_force.js --os=android --apptype=react_native
+            if [ ! -f tmp**/App_react_native_android/android/app/build/outputs/apk/debug/app-debug.apk  ]; then
+              exit 1
+            fi
+          when: always
 
   build-forcedroid-sfdx:
     <<: *linux
@@ -105,28 +121,44 @@ jobs:
       - run: *upgrade-git
       - run: *setup
       - run:
-          name: Install SFDX
-          command: sudo npm install -g sfdx-cli
+          name: Build Native Java App with SFDX
+          command:  |
+            ./test/test_force.js --os=android --apptype=native --use-sfdx
+            if [ ! -f tmp**/App_native_android/app/build/outputs/apk/debug/app-debug.apk ]; then
+              exit 1
+            fi
           when: always
       - run:
-          name: Build Native Java App
-          command: ./test/test_force.js --os=android --apptype=native --use-sfdx
+          name: Build Native Kotlin App with SFDX
+          command:  |
+            ./test/test_force.js --os=android --apptype=native_kotlin --use-sfdx
+            if [ ! -f tmp13920/App_native_kotlin_android/app/build/outputs/apk/debug/app-debug.apk ]; then
+              exit 1
+            fi
           when: always
       - run:
-          name: Build Native Kotlin App
-          command: ./test/test_force.js --os=android --apptype=native_kotlin --use-sfdx
+          name: Build Hybrid Local App with SFDX
+          command:  |
+            ./test/test_force.js --os=android --apptype=hybrid_local --use-sfdx
+            if [ ! -f tmp**/App_hybrid_local_android/platforms/android/app/build/outputs/apk/debug/app-debug.apk ]; then
+              exit 1
+            fi
           when: always
       - run:
-          name: Build Hybrid Local App
-          command: ./test/test_force.js --os=android --apptype=hybrid_local --use-sfdx
+          name: Build Hybrid Remote App with SFDX
+          command:  |
+            ./test/test_force.js --os=android --apptype=hybrid_remote --use-sfdx
+            if [ ! -f tmp**/App_hybrid_remote_android/platforms/android/app/build/outputs/apk/debug/app-debug.apk ]; then
+              exit 1
+            fi
           when: always
       - run:
-          name: Build Hybrid Remote App
-          command: ./test/test_force.js --os=android --apptype=hybrid_remote --use-sfdx
-          when: always
-      - run:
-          name: Build React Native App
-          command: ./test/test_force.js --os=android --apptype=react_native --use-sfdx
+          name: Build React Native App with SFDX
+          command:  |
+            ./test/test_force.js --os=android --apptype=react_native --use-sfdx
+            if [ ! -f tmp**/App_react_native_android/android/app/build/outputs/apk/debug/app-debug.apk  ]; then
+              exit 1
+            fi
           when: always
 
   build-forceios:
@@ -135,14 +167,29 @@ jobs:
       - checkout
       - run: *setup
       - run: *install-ant
-      #- run:
-      #    name: Build Native Objective-C App
-      #    command: ./test/test_force.js --os=ios --apptype=native
-      #    when: always
-      #- run:
-      #    name: Build Native Swift App
-      #    command: ./test/test_force.js --os=ios --apptype=native_swift
-      #    when: always
+      - run: *downgrade-cocoapods
+      - run:
+          name: Downgrade to Node 8
+          commnand: |
+            brew install node@8
+            brew unlink node
+            brew link node@8
+      - run:
+          name: Build Native Objective-C App
+          command:  |
+            ./test/test_force.js --os=ios --apptype=native
+            if [ ! -f  ]; then
+              exit 1
+            fi
+          when: always
+      - run:
+          name: Build Native Swift App
+          command:  |
+            ./test/test_force.js --os=ios --apptype=native_swift
+            if [ ! -f  ]; then
+              exit 1
+            fi
+          when: always
       - run:
           name: Build Hybrid Local App
           command:  |
@@ -151,15 +198,23 @@ jobs:
               exit 1
             fi
           when: always
-      #- run:
-      #    name: Build Hybrid Remote App
-      #    command: ./test/test_force.js --os=ios --apptype=hybrid_remote
-      #    when: always
-      #- run:
-      #    name: Build React Native App
-      #    command: ./test/test_force.js --os=ios --apptype=react_native
-      #    no_output_timeout: 20m
-      #    when: always
+      - run:
+          name: Build Hybrid Remote App
+          command:  |
+            ./test/test_force.js --os=ios --apptype=hybrid_remote
+            if [ ! -f  ]; then
+              exit 1
+            fi
+          when: always
+      - run:
+          name: Build React Native App
+          command:  |
+            ./test/test_force.js --os=ios --apptype=react_native
+            if [ ! -f  ]; then
+              exit 1
+            fi
+          no_output_timeout: 20m
+          when: always
 
   build-forceios-sfdx:
     <<: *mac
@@ -200,5 +255,5 @@ workflows:
     jobs:
       - build-forcedroid
       #- build-forcedroid-sfdx
-      - build-forceios
+      #- build-forceios
       #- build-forceios-sfdx
