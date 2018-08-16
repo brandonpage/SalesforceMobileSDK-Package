@@ -84,11 +84,12 @@ jobs:
       - run:
           name: Build Hybrid Local App
           command:  |
-            set -e
             ./test/test_force.js --os=android --apptype=hybrid_local
-      #      if ls tmp**/App_hybrid_local_android/platforms/android/app/build/outputs/apk/debug/app-debug.apk 1> /dev/null 2>&1; then
-      #        exit 1
-      #      fi
+            if ls tmp**/App_hybrid_local_android/platforms/android/app/build/outputs/apk/debug/app-debug.apk 1> /dev/null 2>&1; then
+              echo "App Built."
+            else
+              exit 1
+            fi
           when: always
       #- run:
       #    name: Build Hybrid Remote App
@@ -201,5 +202,5 @@ workflows:
     jobs:
       - build-forcedroid
       #- build-forcedroid-sfdx
-      - build-forceios
+      #- build-forceios
       #- build-forceios-sfdx
