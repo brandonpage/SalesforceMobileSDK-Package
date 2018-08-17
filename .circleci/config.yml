@@ -41,7 +41,8 @@ aliases:
     command: |
       brew install node@8
       brew unlink node
-      brew link node@8
+      brew link --force node@8
+      echo 'export PATH="/usr/local/opt/node@8/bin:$PATH"' >> ~/.bash_profile
     when: always
 
   - &setup
