@@ -35,6 +35,13 @@ aliases:
       gem uninstall cocoapods
       gem install cocoapods -v 1.4
 
+  - &downgrade-node
+    name: Downgrade to Node 8
+    command: |
+      brew install node@8
+      brew unlink node
+      brew link node@8
+
   - &setup
     name: Setup
     command:  |
@@ -168,12 +175,7 @@ jobs:
       - run: *setup
       - run: *install-ant
       - run: *downgrade-cocoapods
-      - run:
-          name: Downgrade to Node 8
-          commnand: |
-            brew install node@8
-            brew unlink node
-            brew link node@8
+      - run: *downgrade-node
       - run:
           name: Build Native Objective-C App
           command:  |
