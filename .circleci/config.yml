@@ -33,7 +33,7 @@ aliases:
     name: Downgrade to CocoaPods 1.4
     command:  |
       echo Y | sudo gem uninstall cocoapods
-      gem install cocoapods -v 1.4
+      sudo gem install cocoapods -v 1.4
     when: always
 
   - &downgrade-node
@@ -257,7 +257,7 @@ workflows:
 
   pr-build-all-apps:
     jobs:
-      - build-forcedroid
+      #- build-forcedroid
       #- build-forcedroid-sfdx
       - build-forceios
       #- build-forceios-sfdx
