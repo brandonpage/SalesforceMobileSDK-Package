@@ -32,7 +32,7 @@ aliases:
   - &downgrade-cocoapods
     name: Downgrade to CocoaPods 1.4
     command:  |
-      gem uninstall cocoapods
+      echo Y | gem uninstall cocoapods
       gem install cocoapods -v 1.4
 
   - &downgrade-node
