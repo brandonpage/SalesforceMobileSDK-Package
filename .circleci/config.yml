@@ -1,26 +1,4 @@
 aliases:
-  - &upgrade-git
-    name: Update Git
-    command:  |
-      git --version
-      sudo apt-get update
-      sudo apt-get install \
-        build-essential flex bison \
-        libreadline6-dev zlib1g-dev \
-        libssl-dev \
-        libcurl4-gnutls-dev \
-        libexpat1-dev \
-        tcl tk \
-        tcl-dev gettext \
-        asciidoc \
-        docbook2x
-
-      wget https://www.kernel.org/pub/software/scm/git/git-2.13.0.tar.gz
-      tar -xvzf git-2.13.0.tar.gz
-      cd git-2.13.0
-      sudo ./configure
-      sudo make && sudo make install
-
   - &setup
     name: Setup
     command: node ./install.js
@@ -73,7 +51,6 @@ jobs:
     <<: *linux
     steps:
       - checkout
-      - run: *upgrade-git
       - run: *setup
       - run:
           name: Building all android native templates
@@ -84,7 +61,6 @@ jobs:
     <<: *linux
     steps:
       - checkout
-      - run: *upgrade-git
       - run: *setup
       - run: *install-sfdx
       - run:
@@ -96,7 +72,6 @@ jobs:
     <<: *linux
     steps:
       - checkout
-      - run: *upgrade-git
       - run: *setup
       - run: *android-cordova
       - run:
@@ -108,7 +83,6 @@ jobs:
     <<: *linux
     steps:
       - checkout
-      - run: *upgrade-git
       - run: *setup
       - run: *android-cordova
       - run: *install-sfdx
@@ -121,7 +95,6 @@ jobs:
     <<: *linux
     steps:
       - checkout
-      - run: *upgrade-git
       - run: *setup
       - run:
           name: Building all android react native templates
@@ -132,7 +105,6 @@ jobs:
     <<: *linux
     steps:
       - checkout
-      - run: *upgrade-git
       - run: *setup
       - run: *install-sfdx
       - run:

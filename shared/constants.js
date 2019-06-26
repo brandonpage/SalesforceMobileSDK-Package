@@ -53,7 +53,7 @@ module.exports = {
         },
         cordova: {
             checkCmd: 'cordova -v',
-            pluginRepoUri: 'https://github.com/forcedotcom/SalesforceMobileSDK-CordovaPlugin#dev',    // dev
+            pluginRepoUri: 'https://github.com/brandonpage/SalesforceMobileSDK-CordovaPlugin#dev',    // dev
             minVersion: '8.1.2',
 //             pluginRepoUri: 'https://github.com/forcedotcom/SalesforceMobileSDK-CordovaPlugin#v' + VERSION, // GA
             platformVersion: {
