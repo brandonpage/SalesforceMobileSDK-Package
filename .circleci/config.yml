@@ -59,6 +59,7 @@ linux: &linux
     - image: circleci/android:api-28-node
   environment:
     - TERM: "dumb"
+    - GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
 
 mac: &mac
   working_directory: ~/SalesforceMobileSDK-Package
