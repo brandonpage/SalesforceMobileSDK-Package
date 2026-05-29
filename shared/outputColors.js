@@ -1,3 +1,4 @@
+// CI test trigger for W-22712082; revert before merge.
 module.exports = {
 	'red': '\x1b[31;1m',
     'green': '\x1b[32;1m',
